@@ -1,6 +1,6 @@
 //Gripper controller
 #include "ros/ros.h"
-#include "trajectory_msgs/JointTrajectory.h"
+#include "std_msgs/Float64.h"
 #include <iostream>
 
 
@@ -10,23 +10,38 @@ int main(int argc, char **argv) {
 
   ros::NodeHandle n;
 
-  ros::Publisher gripper_pub = n.advertise<trajectory_msgs::JointTrajectory>("/panda/panda_hand_controller/command", 1000);
+  ros::Publisher gripper1_pub = n.advertise<std_msgs::Float64>("/panda/panda_hand_controller1/command", 1000);
+  ros::Publisher gripper2_pub = n.advertise<std_msgs::Float64>("/panda/panda_hand_controller2/command", 1000);
 
   ros::Rate loop_rate(10);
 
   while (ros::ok()){
 
-    trajectory_msgs::JointTrajectory input;
+    char selection{};
+    std::cout << "C - Close\nO - Open\nQ - Quit" << std::endl;
+    std::cin >> selection;
 
-    input.joint_names.clear();
-    input.joint_names.push_back("panda_finger_joint1");
-    input.joint_names.push_back("panda_finger_joint2");
+    std_msgs::Float64 input1;
+    std_msgs::Float64 input2;
 
-    input.points.resize(1);
-    input.points[0].positions.resize(input.joint_names.size(), 1.0);
-    ROS_INFO_STREAM ("Sending command:\n" << input);
+    float finger_pos[]{0,0};
+    if (toupper(selection) == 'C'){
+      input1.data = 0.01;
+      input2.data = 0.01;
+    }
+    else if (toupper(selection) == 'O') {
+      input1.data = 0.04;
+      input2.data = 0.04;
+    }
+    else{
+      std::cout << "Quitting.." << std::endl;
+      ros::shutdown();
+    }
 
-    gripper_pub.publish(input);
+    ROS_INFO_STREAM ("Sending command:\n" << input1 << input2);
+
+    gripper1_pub.publish(input1);
+    gripper2_pub.publish(input2);
 
     ros::spinOnce();
 
