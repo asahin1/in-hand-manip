@@ -10,6 +10,7 @@
 
   <!-- Launch gazebo and hardware_interfaces -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find panda_gazebo)/worlds/manip_world.world"/>
     <arg name="paused" value="true" />
   </include>
   <node name="spawn_franka_urdf" pkg="gazebo_ros" type="spawn_model"
