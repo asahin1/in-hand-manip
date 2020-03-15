@@ -14,12 +14,14 @@ bool set_pose(ros::ServiceClient &, const float p[]);
 bool set_init_pose(ros::ServiceClient &);
 void move_up(ros::ServiceClient &);
 void move_down(ros::ServiceClient &);
+void approach_object(ros::ServiceClient &);
 
 void display_menu(){
   std::cout << "\nP - Print current joint positions" << std::endl;
   std::cout << "I - Set robot to initial pose" << std::endl;
   std::cout << "U - Move Up" << std::endl;
   std::cout << "D - Move Down" << std::endl;
+  std::cout << "A - Approach Object" << std::endl;
   std::cout << "C - Give pose command" << std::endl;
   std::cout << "Q - Quit" << std::endl;
 }
@@ -55,17 +57,22 @@ bool set_pose(ros::ServiceClient &client, const float p[]){
 }
 
 bool set_init_pose(ros::ServiceClient &client){
-  float pose_input []{0.2,0.2,0.4,0.7071068,0,0.7071068,0};
+  float pose_input []{0.2,0.2,0.35,0.7071068,0,0.7071068,0};
   return set_pose(client,pose_input);
 }
 
 void move_up(ros::ServiceClient &client){
-  float pose_input []{0.2,0.2,0.6,0.7071068,0,0.7071068,0};
+  float pose_input []{0.4,0.2,0.4,0.7071068,0,0.7071068,0};
   set_pose(client,pose_input);
 }
 
 void move_down(ros::ServiceClient &client){
-  float pose_input []{0.2,0.2,0.3,0.7071068,0,0.7071068,0};
+  float pose_input []{0.4,0.2,0.3,0.7071068,0,0.7071068,0};
+  set_pose(client,pose_input);
+}
+
+void approach_object(ros::ServiceClient &client){
+  float pose_input []{0.4,0.2,0.35,0.7071068,0,0.7071068,0};
   set_pose(client,pose_input);
 }
 
@@ -99,6 +106,9 @@ int main(int argc, char **argv) {
         break;
       case 'D':
         move_down(client_pose);
+        break;
+      case 'A':
+        approach_object(client_pose);
         break;
       case 'C':{
         float target[]{0,0,0,0,0,0,0};

@@ -26,8 +26,8 @@ int main(int argc, char **argv) {
 
     float finger_pos[]{0,0};
     if (toupper(selection) == 'C'){
-      input1.data = 0.01;
-      input2.data = 0.01;
+      input1.data = 0.0;
+      input2.data = 0.0;
     }
     else if (toupper(selection) == 'O') {
       input1.data = 0.04;
