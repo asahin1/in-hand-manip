@@ -34,6 +34,14 @@
         <geometry>
           <mesh filename="package://franka_description/meshes/collision/finger.stl"/>
         </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>20</mu>
+              <mu2>10</mu2>
+            </ode>
+          </friction>
+        </surface>
       </collision>
 	<inertial>
             <mass value="0.1" />
@@ -52,6 +60,14 @@
         <geometry>
           <mesh filename="package://franka_description/meshes/collision/finger.stl"/>
         </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>20</mu>
+              <mu2>10</mu2>
+            </ode>
+          </friction>
+        </surface>
       </collision>
 	<inertial>
             <mass value="0.1" />
