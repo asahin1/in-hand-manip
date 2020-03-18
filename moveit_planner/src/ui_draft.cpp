@@ -58,17 +58,17 @@ bool set_pose(ros::ServiceClient &client, const float p[]){
 
 bool set_init_pose(ros::ServiceClient &client){
   // for config 1:
-  // float pose_input []{0.2,0.2,0.35,0.7071068,0,0.7071068,0};
+  float pose_input []{0.2,0.2,0.35,0.7071068,0,0.7071068,0};
   // for config 2:
-  float pose_input []{0.26,0.2,0.27,0.5,0.5,0.5,0.5};
+  // float pose_input []{0.26,0.2,0.27,0.5,0.5,0.5,0.5};
   return set_pose(client,pose_input);
 }
 
 void move_up(ros::ServiceClient &client){
   // for config 1:
-  // float pose_input []{0.4,0.2,0.4,0.7071068,0,0.7071068,0};
+  float pose_input []{0.4,0.2,0.4,0.7071068,0,0.7071068,0};
   // for config 2:
-  float pose_input []{0.32,0.2,0.4,0.5,0.5,0.5,0.5};
+  // float pose_input []{0.26,0.2,0.35,0.5,0.5,0.5,0.5};
   set_pose(client,pose_input);
 }
 
@@ -76,15 +76,15 @@ void move_down(ros::ServiceClient &client){
   // for config 1:
   float pose_input []{0.4,0.2,0.3,0.7071068,0,0.7071068,0};
   // for config 2:
-  // float pose_input []{0.32,0.2,0.3,0.5,0.5,0.5,0.5};
+  // float pose_input []{0.4,0.3,0.5,0.7071068,0,0.7071068,0};
   set_pose(client,pose_input);
 }
 
 void approach_object(ros::ServiceClient &client){
   // for config 1:
-  // float pose_input []{0.4,0.2,0.35,0.7071068,0,0.7071068,0};
+  float pose_input []{0.4,0.2,0.35,0.7071068,0,0.7071068,0};
   // for config 2:
-  float pose_input []{0.32,0.2,0.27,0.5,0.5,0.5,0.5};
+  // float pose_input []{0.32,0.2,0.27,0.5,0.5,0.5,0.5};
   set_pose(client,pose_input);
 }
 
