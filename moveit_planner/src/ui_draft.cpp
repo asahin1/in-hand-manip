@@ -243,7 +243,7 @@ int main(int argc, char **argv) {
     display_menu();
     selection = get_selection();
     switch (selection) {
-      case 'P':{
+      case 'J':{
         std::vector<float> joint_pos{get_joint_pos(interface)};
         std::cout << "[ ";
         for (auto pos:joint_pos)
