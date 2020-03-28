@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<robot name="block_object">
+
+  <link name="block">
+    <collision>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.1"/>
+      </geometry>
+      <contact_coefficients mu="200" kp="100000" kd="100" />
+    </collision>
+    <visual name="blabla">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.1"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia
+        ixx="1e-05" ixy="0.0" ixz="0.0"
+        iyy="1e-05" iyz="0.0"
+        izz="1e-06"/>
+    </inertial>
+  </link>
+
+</robot>

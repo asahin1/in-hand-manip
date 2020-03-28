@@ -9,6 +9,7 @@
 #include <sensor_msgs/JointState.h>
 #include <geometry_msgs/Pose.h>
 #include <gazebo_msgs/ModelStates.h>
+#include <gazebo_msgs/GetModelState.h>
 #include <moveit_planner.hpp>
 #include <std_srvs/Empty.h>
 #include <tf/LinearMath/Matrix3x3.h>
@@ -18,17 +19,17 @@
 void display_menu();
 char get_selection();
 std::vector<float> get_joint_pos(ros::NodeHandle &);
-std::vector<float> get_obj_pos(ros::NodeHandle &);
+std::vector<float> get_obj_pos(ros::ServiceClient &);
 bool set_pose(ros::ServiceClient &, const float p[]);
 bool set_init_pose(ros::ServiceClient &);
 void move_up(ros::ServiceClient &);
 void move_down(ros::ServiceClient &);
 void approach_object(ros::ServiceClient &);
 void reset_world(ros::ServiceClient &);
-void simulate_1(ros::NodeHandle &, ros::ServiceClient &);
-void simulate_2(ros::NodeHandle &, ros::ServiceClient &);
-void simulate_3(ros::NodeHandle &, ros::ServiceClient &);
-void simulate_4(ros::NodeHandle &, ros::ServiceClient &);
+void simulate_1(ros::ServiceClient &, ros::ServiceClient &);
+void simulate_2(ros::ServiceClient &, ros::ServiceClient &);
+void simulate_3(ros::ServiceClient &, ros::ServiceClient &);
+void simulate_4(ros::ServiceClient &, ros::ServiceClient &);
 
 
 // Function to display menu options
@@ -67,12 +68,35 @@ std::vector<float> get_joint_pos(ros::NodeHandle &n){
 }
 
 // Gets the pose(position+orientation) of the block object from topic '/gazebo/model_states', returns a vector of size 7
-std::vector<float> get_obj_pos(ros::NodeHandle &n){
-  gazebo_msgs::ModelStates::ConstPtr model_states;
-  model_states = ros::topic::waitForMessage<gazebo_msgs::ModelStates>("/gazebo/model_states",n);
-  std::cout << "Object position received" << std::endl;
+// std::vector<float> get_obj_pos(ros::NodeHandle &n){
+//   gazebo_msgs::ModelStates::ConstPtr model_states;
+//   model_states = ros::topic::waitForMessage<gazebo_msgs::ModelStates>("/gazebo/model_states",n);
+//   std::cout << "Object position received" << std::endl;
+//   std::vector<float> vec;
+//   geometry_msgs::Pose obj_pose{model_states->pose[2]};
+//   vec.push_back(obj_pose.position.x);
+//   vec.push_back(obj_pose.position.y);
+//   vec.push_back(obj_pose.position.z);
+//   vec.push_back(obj_pose.orientation.x);
+//   vec.push_back(obj_pose.orientation.y);
+//   vec.push_back(obj_pose.orientation.z);
+//   vec.push_back(obj_pose.orientation.w);
+//   return vec;
+// }
+
+std::vector<float> get_obj_pos(ros::ServiceClient &client){
+  gazebo_msgs::GetModelState srv;
+  srv.request.model_name = "block_object";
+  if (client.call(srv))
+  {
+    std::cout << "Object position received" << std::endl;
+  }
+  else
+  {
+    ROS_ERROR("Failed to call service");
+  }
   std::vector<float> vec;
-  geometry_msgs::Pose obj_pose{model_states->pose[2]};
+  geometry_msgs::Pose obj_pose{srv.response.pose};
   vec.push_back(obj_pose.position.x);
   vec.push_back(obj_pose.position.y);
   vec.push_back(obj_pose.position.z);
@@ -133,8 +157,8 @@ void approach_object(ros::ServiceClient &client){
   set_pose(client,pose_input);
 }
 
-void simulate_1(ros::NodeHandle &n, ros::ServiceClient &client){
-  std::vector<float> obj_pose{get_obj_pos(n)};
+void simulate_1(ros::ServiceClient &obj_client, ros::ServiceClient &client){
+  std::vector<float> obj_pose{get_obj_pos(obj_client)};
   tf::Quaternion q{obj_pose[3],obj_pose[4],obj_pose[5],obj_pose[6]};
   tf::Quaternion rot{0.7071068,0,0,0.7071068};
   tf::Quaternion o1{q*rot};
@@ -155,8 +179,8 @@ void simulate_1(ros::NodeHandle &n, ros::ServiceClient &client){
       std::cout << "Failed" << std::endl;
 }
 
-void simulate_2(ros::NodeHandle &n, ros::ServiceClient &client){
-  std::vector<float> obj_pose{get_obj_pos(n)};
+void simulate_2(ros::ServiceClient &obj_client, ros::ServiceClient &client){
+  std::vector<float> obj_pose{get_obj_pos(obj_client)};
   tf::Quaternion q{obj_pose[3],obj_pose[4],obj_pose[5],obj_pose[6]};
   tf::Quaternion rot{0.7071068,0,0,0.7071068};
   tf::Quaternion o2{q*rot};
@@ -178,8 +202,8 @@ void simulate_2(ros::NodeHandle &n, ros::ServiceClient &client){
       std::cout << "Failed" << std::endl;
 }
 
-void simulate_3(ros::NodeHandle &n, ros::ServiceClient &client){
-  std::vector<float> obj_pose{get_obj_pos(n)};
+void simulate_3(ros::ServiceClient &obj_client, ros::ServiceClient &client){
+  std::vector<float> obj_pose{get_obj_pos(obj_client)};
   tf::Quaternion q{obj_pose[3],obj_pose[4],obj_pose[5],obj_pose[6]};
   tf::Quaternion rot{0.7071068,0,0,0.7071068};
   tf::Quaternion o3{q*rot};
@@ -202,8 +226,8 @@ void simulate_3(ros::NodeHandle &n, ros::ServiceClient &client){
       std::cout << "Failed" << std::endl;
 }
 
-void simulate_4(ros::NodeHandle &n, ros::ServiceClient &client){
-  std::vector<float> obj_pose{get_obj_pos(n)};
+void simulate_4(ros::ServiceClient &obj_client, ros::ServiceClient &client){
+  std::vector<float> obj_pose{get_obj_pos(obj_client)};
   tf::Quaternion q{obj_pose[3],obj_pose[4],obj_pose[5],obj_pose[6]};
   tf::Quaternion rot{0.7071068,0,0,0.7071068};
   tf::Quaternion o1{q};
@@ -235,6 +259,7 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "interface");
   ros::NodeHandle interface;
   ros::ServiceClient client_pose = interface.serviceClient<moveit_planner::MovePose>("move_to_pose");
+  ros::ServiceClient client_obj = interface.serviceClient<gazebo_msgs::GetModelState>("gazebo/get_model_state");
   ros::ServiceClient reset = interface.serviceClient<std_srvs::Empty>("gazebo/reset_world");
 
   char selection {};
@@ -252,7 +277,7 @@ int main(int argc, char **argv) {
         break;
       }
       case 'O':{
-        std::vector<float> obj_pose{get_obj_pos(interface)};
+        std::vector<float> obj_pose{get_obj_pos(client_obj)};
         std::cout << "Position: ";
         std::cout << "[ " << obj_pose.at(0) << " " << obj_pose.at(1) <<  " " << obj_pose.at(2) << " ]" << std::endl;
         std::cout << "Orientation: ";
@@ -302,19 +327,19 @@ int main(int argc, char **argv) {
         break;
       }
       case '1':{
-        simulate_1(interface,client_pose);
+        simulate_1(client_obj,client_pose);
         break;
       }
       case '2':{
-        simulate_2(interface,client_pose);
+        simulate_2(client_obj,client_pose);
         break;
       }
       case '3':{
-        simulate_3(interface,client_pose);
+        simulate_3(client_obj,client_pose);
         break;
       }
       case '4':{
-        simulate_4(interface,client_pose);
+        simulate_4(client_obj,client_pose);
         break;
       }
       case 'R':
