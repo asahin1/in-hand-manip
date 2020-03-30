@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Launch robot_description onto param server -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find panda_gazebo)/desc/franka_camera.xacro" />
+  <param name="table_description" textfile="$(find object_description)/urdf/table.urdf"/>
+  <param name="object_description" textfile="$(find object_description)/urdf/block.urdf"/>
+  <rosparam file="$(find panda_gazebo)/config/panda_control.yaml" command="load" />
+
+  <!-- Launch frames for rviz -->
+  <node name="map_frame" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 map world 100" />
+  <node name="frame1_map" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 world panda_link0 100" />
+
+  <!-- Launch gazebo and hardware_interfaces -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- <arg name="world_name" value="$(find panda_gazebo)/worlds/custom.world"/> -->
+    <arg name="paused" value="true" />
+  </include>
+  <node name="spawn_franka_urdf" pkg="gazebo_ros" type="spawn_model"
+  	args="-param robot_description -urdf -model panda -J panda_joint2 0.0 -J panda_joint6 0.785398 -J panda_joint7 0.785398" />
+  <node name="spawn_table_urdf" pkg="gazebo_ros" type="spawn_model"
+    args="-param table_description -urdf -x 0.7 -y 0 -z 0.15 -model custom_table" />
+  <node name="spawn_object_urdf" pkg="gazebo_ros" type="spawn_model"
+    args="-param object_description -urdf -x 0.5 -y 0.2 -z 0.35 -model block_object" />
+
+  <!-- Launch controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller panda_hand_controller1 panda_hand_controller2 gazebo_ros_control" ns="/panda"/>
+
+  <!-- Start publishing to /tf for rviz -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
+    <remap from="joint_states" to="panda/joint_states" />
+  </node>
+
+  <!-- Start moveit -->
+  <include file="$(find panda_moveit_config)/launch/move_group.launch" />
+</launch>

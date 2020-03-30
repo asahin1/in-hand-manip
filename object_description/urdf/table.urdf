@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 
-<robot name="block_object">
+<robot name="custom_table">
+  <gazebo>
+    <static>true</static>
+  </gazebo>
 
-  <link name="block">
+  <link name="table">
     <collision>
       <geometry>
-        <box size="0.02 0.02 0.1"/>
+        <box size="0.5 0.5 0.3"/>
       </geometry>
       <!-- <contact_coefficients mu="200" kp="1e+6" kd="1" /> -->
       <contact_coefficients
@@ -15,15 +18,15 @@
     </collision>
     <visual>
       <geometry>
-        <box size="0.02 0.02 0.1"/>
+        <box size="0.5 0.5 0.3"/>
       </geometry>
     </visual>
     <inertial>
-      <mass value="0.1"/>
+      <mass value="0.5"/>
       <inertia
-        ixx="5e-05" ixy="0.0" ixz="0.0"
-        iyy="5e-05" iyz="0.0"
-        izz="3e-06"/>
+        ixx="1e-06" ixy="0.0" ixz="0.0"
+        iyy="1e-06" iyz="0.0"
+        izz="1e-05"/>
     </inertial>
   </link>
 
