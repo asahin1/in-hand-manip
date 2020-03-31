@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- c-->
 <robot name="gripper">
-  <!-- Controller Stuff 
+  <!-- Controller Stuff  -->
   <gazebo>
-      <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
         <robotNamespace>/gripper</robotNamespace>
         <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
         <legacyModeNS>true</legacyModeNS>
       </plugin>
   </gazebo>
--->
+
   <link name="world">
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </link>
@@ -103,7 +103,7 @@
 
   <joint
     name="J1"
-    type="revolute">
+    type="continuous">
     <origin
       xyz="0 -0.02985 0.06936"
       rpy="0 0 0" />
@@ -113,13 +113,13 @@
       link="L1" />
     <axis
       xyz="1 0 0" />
+    <!-- <dynamics damping="1.0" friction="10.0"/> -->
     <limit
       lower="0"
       upper="0"
-      effort="0"
-      velocity="0" />
-<!-- Controller Stuff -->
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
+      effort="1"
+      velocity="0.5" />
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
   </joint>
 
 
@@ -167,7 +167,7 @@
 
   <joint
     name="J2"
-    type="revolute">
+    type="continuous">
     <origin
       xyz="0 0.02985 0.06936"
       rpy="0 0 3.1415" />
@@ -177,35 +177,36 @@
       link="L2" />
     <axis
       xyz="1 0 0" />
+    <!-- <dynamics damping="1.0" friction="10.0"/> -->
     <limit
       lower="0"
       upper="0"
-      effort="0"
-      velocity="0" />
-<!-- Controller Stuff -->
-    <hardwareInterface>PositionJointInterface</hardwareInterface>
+      effort="1"
+      velocity="0.5" />
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
   </joint>
 
-<!-- Controller Stuff 
-  <transmission name="head_swivel_trans">
+<!-- Controller Stuff -->
+  <transmission name="head_swivel_trans1">
     <type>transmission_interface/SimpleTransmission</type>
-    <actuator name="$head_swivel_motor">
+    <joint name="J1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="head_swivel_motor1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-    <joint name="J1">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
-    </joint>
   </transmission>
 
-  <transmission name="head_swivel_trans">
+  <transmission name="head_swivel_trans2">
     <type>transmission_interface/SimpleTransmission</type>
-    <actuator name="$head_swivel_motor">
+    <joint name="J2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="head_swivel_motor2">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-    <joint name="J2">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
-    </joint>
   </transmission>
--->
+
 
 </robot>
