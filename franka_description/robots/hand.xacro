@@ -36,8 +36,8 @@
         </geometry>
         <contact_coefficients
           mu="0.5"
-          kp="1000000"
-          kd="10"/>
+          kp="100"
+          kd="1"/>
         <!-- <surface>
           <friction>
             <ode>
@@ -69,8 +69,8 @@
         </geometry>
         <contact_coefficients
           mu="0.5"
-          kp="1000000"
-          kd="10"/>
+          kp="100"
+          kd="1"/>
         <!-- <surface>
           <friction>
             <ode>
