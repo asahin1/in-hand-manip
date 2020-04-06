@@ -17,7 +17,8 @@
     type="spawn_model"
     args="-file $(find gripper)/urdf/gripper.urdf -urdf -z 0.2 -P 1.5708 -model gripper"
     output="screen" />
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller finger_l_controller finger_r_controller" ns="/gripper"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+    respawn="false" output="screen" args="joint_state_controller l_finger_effort r_finger_position" ns="/gripper"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
     <remap from="joint_states" to="gripper/joint_states" />
   </node>
