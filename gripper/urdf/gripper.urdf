@@ -23,7 +23,7 @@
     <mu2>1</mu2>
     <kp>10000000</kp>
     <kd>1</kd>
-    <minDepth>0.001</minDepth> 
+    <minDepth>0.001</minDepth>
   </gazebo>
 
   <link name="world">
@@ -226,5 +226,8 @@
     </actuator>
   </transmission>
 
+  <gazebo>
+    <plugin name="friction_plugin" filename="libfriction_plugin.so"> </plugin>
+  </gazebo>
 
 </robot>

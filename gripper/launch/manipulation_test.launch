@@ -2,8 +2,10 @@
 <launch>
   <param name="object_description" textfile="$(find object_description)/urdf/long_block.urdf"/>
   <rosparam file="$(find gripper)/config/controller.yaml" command="load" />
+  <include file="$(find gripper_controls)/launch/controller.launch"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="paused" value="true"/>
+    <arg name="verbose" value="true" />
    </include>
   <!-- <node
     name="tf_footprint_base"
@@ -20,8 +22,8 @@
     output="screen" />
   <node name="spawn_object_urdf" pkg="gazebo_ros" type="spawn_model"
     args="-param object_description -urdf -x 0.15 -z 0.05 -model block_object" />
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller r_finger_effort l_finger_position" ns="/gripper"/>
-  <node name="controller_loader" pkg="controller_manager" type="spawner" output="screen" args="--stopped l_finger_effort r_finger_position" ns="/gripper"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller r_finger_position l_finger_position" ns="/gripper"/>
+  <node name="controller_loader" pkg="controller_manager" type="spawner" output="screen" args="--stopped l_finger_effort r_finger_effort" ns="/gripper"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
     <remap from="joint_states" to="gripper/joint_states" />
   </node>
@@ -30,6 +32,5 @@
     pkg="rostopic"
     type="rostopic"
     args="pub /calibrated std_msgs/Bool true" /> -->
-
 
 </launch>
