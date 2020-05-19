@@ -151,7 +151,7 @@ bool Hand::slide_left_down(gripper_controls::PositionCommand::Request &req, grip
     set_friction_r = set_friction_right(true);
     finger_state = 1;
   }
-  send_torque = command_torque(1, -0.3);
+  send_torque = command_torque(1, -0.6);
   if (send_torque){
     float initial_position;
     initial_position = read_position(1);
